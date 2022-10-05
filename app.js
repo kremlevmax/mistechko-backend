@@ -1,11 +1,23 @@
-const express = require("express");
-const connectToDB = require("./db/connect");
-const app = express();
 require("dotenv").config();
+require("express-async-errors");
+const express = require("express");
+const app = express();
 
-const PORT = process.env.PORT || 4000;
+const connectToDB = require("./db/connect");
+
+const notFoundMiddleware = require("./middleware/not-found");
+const errorHandlerMiddleware = require("./middleware/error-handler");
+
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("users api");
+});
+
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
+
+const PORT = process.env.PORT || 4000;
 const start = () => {
   connectToDB(process.env.MONGO_URI);
   app.listen(PORT, () => {
