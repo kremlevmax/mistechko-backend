@@ -6,6 +6,7 @@ const app = express();
 //Error handlers
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
+const authorizationMiddleware = require("./middleware/authorization");
 app.use(express.json());
 
 //connect to DB
@@ -17,7 +18,7 @@ const adsRouter = require("./routes/ads");
 
 //Routes
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/ads", adsRouter);
+app.use("/api/v1/ads", authorizationMiddleware, adsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
